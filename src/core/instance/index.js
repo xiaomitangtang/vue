@@ -5,7 +5,9 @@ import { eventsMixin } from './events'
 import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
 
-function Vue (options) {
+
+// 原始的Vue 构造函数
+function Vue(options) {
   if (process.env.NODE_ENV !== 'production' &&
     !(this instanceof Vue)
   ) {
