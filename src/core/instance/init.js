@@ -12,7 +12,7 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 
 let uid = 0
 
-export function initMixin (Vue: Class<Component>) {
+export function initMixin(Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
@@ -49,29 +49,33 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
-    initState(vm)
-    initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
+    initLifecycle(vm)//仅仅作了一些参数的初始化，挂载 $parent  $root
+    initEvents(vm)//更新组件listenders
+    initRender(vm)//初始化  createElement  _c =createElement  attr  listeeners  响应式处理
+    callHook(vm, 'beforeCreate')//执行钩子函数，，，所有钩子函数都是一个数组，所以，可以多次添加钩子函数，回一次执行，比如mixin
+    //
 
+    initInjections(vm) // resolve injections before data/props
+    // 是通过递归网上找父级的 _provided  iniject 挂载在vm上，并定义set 警告函数
+    initState(vm)//prop  method  data computed  watch 初始化，并挂载到 vm上
+    // methods挂载绑定vm作为this
+    initProvide(vm) // resolve provide after data/props//挂载  _provided
+    callHook(vm, 'created')
+    // created之前不能通过this访问data  props  等等，因为还没有完成代理 以及响应式
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
       vm._name = formatComponentName(vm, false)
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-
+    // 如果传递了el  会自动进行挂载
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
   }
 }
 
-export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
+export function initInternalComponent(vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
   // doing this because it's faster than dynamic enumeration.
   const parentVnode = options._parentVnode
@@ -90,7 +94,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
-export function resolveConstructorOptions (Ctor: Class<Component>) {
+export function resolveConstructorOptions(Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
@@ -114,7 +118,7 @@ export function resolveConstructorOptions (Ctor: Class<Component>) {
   return options
 }
 
-function resolveModifiedOptions (Ctor: Class<Component>): ?Object {
+function resolveModifiedOptions(Ctor: Class<Component>): ?Object {
   let modified
   const latest = Ctor.options
   const sealed = Ctor.sealedOptions
