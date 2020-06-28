@@ -8,12 +8,14 @@ import Vue from './runtime/index'
 import { query } from './util/index'
 import { compileToFunctions } from './compiler/index'
 import { shouldDecodeNewlines, shouldDecodeNewlinesForHref } from './util/compat'
-
+// 入口文件
 const idToTemplate = cached(id => {
+  // 通过  id  获取到元素的innerHtml   内部结构
   const el = query(id)
   return el && el.innerHTML
 })
 
+// 扩展$mount   加入了编译器，所以只有 浏览器版才可以使用template，工程版本不可用
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -86,7 +88,7 @@ Vue.prototype.$mount = function (
  * Get outerHTML of elements, taking care
  * of SVG elements in IE as well.
  */
-function getOuterHTML (el: Element): string {
+function getOuterHTML(el: Element): string {
   if (el.outerHTML) {
     return el.outerHTML
   } else {
