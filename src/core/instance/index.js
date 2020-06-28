@@ -25,8 +25,15 @@ stateMixin(Vue)//挂载$data $props  $set $delete $watch  工具函数
 
 
 
-eventsMixin(Vue)//挂载 $on   $on可以接收事件名数组
+eventsMixin(Vue)//挂载 $on   $on可以接收事件名数组   $once  $off
 // this.$on(['once','destory'...]) 会依次绑定事件
+// 理论上 $on 第一个参数可以接收多维数组。。。。不过没啥意思
+//  $once 用一个函数代理，这个函数在执行时 首先把自己卸载了
+// 如果  以 hook:开头  会被认为是钩子函数
+
+// $off  不传参数会把所有_event 移除  危险
+// 移除是数组逆向遍历，所以，，不要传空的箭头函数。。。
+// $emit  触发当前实例的所有监听对应的名字，  自己触发 自己监听！！！！
 lifecycleMixin(Vue)
 renderMixin(Vue)
 
