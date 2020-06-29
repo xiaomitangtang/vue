@@ -35,6 +35,9 @@ eventsMixin(Vue)//挂载 $on   $on可以接收事件名数组   $once  $off
 // 移除是数组逆向遍历，所以，，不要传空的箭头函数。。。
 // $emit  触发当前实例的所有监听对应的名字，  自己触发 自己监听！！！！
 lifecycleMixin(Vue)
+//  _update  挂载
+// $destroy $forceUpdate挂载
+// destory 完成之后  再去取消监听函数
 renderMixin(Vue)
-
+// 挂载 $nextTick _render
 export default Vue
