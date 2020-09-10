@@ -54,5 +54,5 @@ lifecycleMixin(Vue)
 
 
 renderMixin(Vue)
-// 挂载 $nextTick _render
+// 挂载 $nextTick    _render
 export default Vue
