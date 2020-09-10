@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Vue.js modal component example</title>
-    <!-- Delete ".min" for console warnings in development -->
-    <script src="../../dist/vue.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <!-- template for the modal component -->
-    <script type="text/x-template" id="modal-template">
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue.js modal component example</title>
+  <!-- Delete ".min" for console warnings in development -->
+  <script src="../../dist/vue.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- template for the modal component -->
+  <script type="text/x-template" id="modal-template">
       <transition name="modal" appear>
         <div class="modal-mask">
           <div class="modal-wrapper">
@@ -41,32 +43,34 @@
       </transition>
     </script>
 
-    <!-- app -->
-    <div id="app">
-      <button id="show-modal" @click="showModal = true">Show Modal</button>
-      <!-- use the modal component, pass in the prop -->
-      <modal v-if="showModal" @close="showModal = false">
-        <!--
+  <!-- app -->
+  <div id="app">
+    <button id="show-modal" @click="showModal = true">Show Modal</button>
+    <!-- use the modal component, pass in the prop -->
+    <modal v-if="showModal" @close="showModal = false">
+      <!--
           you can use custom content here to overwrite
           default content
         -->
-        <h3 slot="header">custom header</h3>
-      </modal>
-    </div>
+      <h3 slot="header">custom header</h3>
+    </modal>
+  </div>
 
-    <script>
-      // register modal component
-      Vue.component('modal', {
-        template: '#modal-template'
-      })
+  <script>
+    // register modal component
+    Vue.component('modal', {
+      template: '#modal-template'
+    })
 
-      // start app
-      new Vue({
-        el: '#app',
-        data: {
-          showModal: false
-        }
-      })
-    </script>
-  </body>
+    // start app
+    const app = new Vue({
+      el: '#app',
+      data: {
+        showModal: false
+      }
+    })
+    console.log(app)
+  </script>
+</body>
+
 </html>

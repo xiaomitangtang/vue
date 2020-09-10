@@ -16,6 +16,7 @@ export function initMixin(Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
+    // 全局共享id
     vm._uid = uid++
 
     let startTag, endTag
@@ -50,8 +51,9 @@ export function initMixin(Vue: Class<Component>) {
     // expose real self
     vm._self = vm
     initLifecycle(vm)//仅仅作了一些参数的初始化，挂载 $parent  $root
-    initEvents(vm)//更新组件listenders
+    initEvents(vm)//把父组件监听在本组件的事件进行监听
     initRender(vm)//初始化  createElement  _c =createElement  attr  listeeners  响应式处理
+    // render  计算得到vnode
     callHook(vm, 'beforeCreate')//执行钩子函数，，，所有钩子函数都是一个数组，所以，可以多次添加钩子函数，回一次执行，比如mixin
     //
 
@@ -59,7 +61,7 @@ export function initMixin(Vue: Class<Component>) {
     // 是通过递归网上找父级的 _provided  iniject 挂载在vm上，并定义set 警告函数
     initState(vm)//prop  method  data computed  watch 初始化，并挂载到 vm上
     // methods挂载绑定vm作为this
-    initProvide(vm) // resolve provide after data/props//挂载  _provided
+    initProvide(vm) // resolve provide after data/props//挂载  _provided 应该是提供给子组件使用
     callHook(vm, 'created')
     // created之前不能通过this访问data  props  等等，因为还没有完成代理 以及响应式
     /* istanbul ignore if */
