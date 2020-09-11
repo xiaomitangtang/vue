@@ -32,6 +32,9 @@ export const emptyNode = new VNode('', {}, [])
 
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
+// 先判断key   在判断 tag isComment data存在  就认为是同一个vnode  会进行patch
+// 所以如果列表中key不设置 默认都是undefinde 相同，，就是每个都进行pactch更新节点子节点
+// 如果有key就会跳过
 function sameVnode(a, b) {
   return (
     a.key === b.key && (
@@ -135,7 +138,7 @@ export function createPatchFunction(backend) {
   function createElm(
     vnode,
     insertedVnodeQueue,
-    parentElm,
+    parentElm,// 后三个暂时没看到哪里传的了额
     refElm,
     nested,
     ownerArray,
@@ -490,7 +493,7 @@ export function createPatchFunction(backend) {
       removeVnodes(oldCh, oldStartIdx, oldEndIdx)
     }
   }
-
+  // 把多有的id放到一个对象上作为key  如果有冲突  就说明重复了
   function checkDuplicateKeys(children) {
     const seenKeys = {}
     for (let i = 0; i < children.length; i++) {
@@ -508,7 +511,7 @@ export function createPatchFunction(backend) {
       }
     }
   }
-
+  // 通过for  依次比较  找到就返回
   function findIdxInOld(node, oldCh, start, end) {
     for (let i = start; i < end; i++) {
       const c = oldCh[i]
@@ -741,6 +744,7 @@ export function createPatchFunction(backend) {
       // 如果不是真是dom  如果是相同的节点类型，。，，，就直接比对vnode了
       if (!isRealElement && sameVnode(oldVnode, vnode)) {
         // patch existing root node
+        //如果不是真是节点  那就是    vdone  如果是同一个vnode 进行diff
         patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)
       } else {
         // 如果是真实dom
@@ -749,6 +753,7 @@ export function createPatchFunction(backend) {
           // check if this is server-rendered content and if we can perform
           // a successful hydration.
           // data-server-rendered   服务端渲染标记  如果有 就去掉？？？？
+          // nodeType === 1   元素节点
           if (oldVnode.nodeType === 1 && oldVnode.hasAttribute(SSR_ATTR)) {
             oldVnode.removeAttribute(SSR_ATTR)
             hydrating = true
@@ -778,6 +783,7 @@ export function createPatchFunction(backend) {
         const parentElm = nodeOps.parentNode(oldElm)
 
         // create new node
+        // 先通过旧节点的父元素，。插入新节点  然后在删除旧节点
         createElm(
           vnode,
           insertedVnodeQueue,
