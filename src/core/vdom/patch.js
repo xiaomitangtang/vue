@@ -90,9 +90,28 @@ export function createPatchFunction(backend) {
     cbs[hooks[i]] = []
     for (j = 0; j < modules.length; ++j) {
       if (isDef(modules[j][hooks[i]])) {
+        // modules[
+        //   attrs,
+        //   klass,
+        //   events,
+        //   domProps,
+        //   style,
+        //   transition
+        // ]
+
         cbs[hooks[i]].push(modules[j][hooks[i]])
       }
     }
+    /*
+    cbs={
+      // attrs
+      'create':[attrs：{create update},klass {create update}，events，domProps，style，transition],
+      'activate',
+      'update',
+       'remove',
+       'destroy'
+    }
+    */
   }
   // 创建空虚拟节点
   function emptyNodeAt(elm) {
@@ -223,7 +242,9 @@ export function createPatchFunction(backend) {
   function createComponent(vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
     if (isDef(i)) {
+      // 内部组件 keepalive   vnode.data.keepAlive = true  把这个属性设置为true了
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 下面一句话 把  i==>ivnode.data.hook.init  并执行  会生成 实例
       if (isDef(i = i.hook) && isDef(i = i.init)) {
         i(vnode, false /* hydrating */)
       }
@@ -538,7 +559,7 @@ export function createPatchFunction(backend) {
     }
 
     const elm = vnode.elm = oldVnode.elm
-
+    // 如果是异步组件。。。
     if (isTrue(oldVnode.isAsyncPlaceholder)) {
       if (isDef(vnode.asyncFactory.resolved)) {
         hydrate(oldVnode.elm, vnode, insertedVnodeQueue)
@@ -570,6 +591,20 @@ export function createPatchFunction(backend) {
 
     const oldCh = oldVnode.children
     const ch = vnode.children
+
+    // cbs  是一个存储了各种生命周期 的各种属性的创建和更新的大对象
+
+    /*
+        cbs={
+          // attrs
+          'create':[attrs：{create update},klass {create update}，events，domProps，style，transition],
+          'activate',
+          'update',
+          'remove',
+          'destroy'
+        }
+*/
+    // 如果是可比较的，就进行各种属性事件的执行  然后如果有update 就执行update
     if (isDef(data) && isPatchable(vnode)) {
       for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
       if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
