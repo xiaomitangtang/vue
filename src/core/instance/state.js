@@ -345,6 +345,8 @@ function createWatcher(
     options = handler
     handler = handler.handler
   }
+  // watcher 的handle参数可以是字符串，，指代 vm实例上的对应属性
+
   if (typeof handler === 'string') {
     handler = vm[handler]
   }
